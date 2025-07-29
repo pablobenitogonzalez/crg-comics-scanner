@@ -1,1 +1,0 @@
-# crg-comics-scanner
