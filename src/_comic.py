@@ -1,14 +1,7 @@
 import urllib.parse
-from datetime import datetime
 from enum import Enum
 
 import _topic
-
-
-# noinspection HttpUrlsUsage
-class Protocol(Enum):
-    HTTP = 'http://'
-    ED2K = 'ed2k://'
 
 
 class Property(Enum):
@@ -17,13 +10,6 @@ class Property(Enum):
     ED2K_LINK = 'ed2k_link'
     TOPIC_ID = 'topic_id'
     TOPIC_LINK = 'topic_link'
-    TOPIC_OWNER = 'topic_owner'
-    TOPIC_CREATED = 'topic_created'
-    TOPIC_TITLE = 'topic_title'
-    TOPIC_DESCRIPTION = 'topic_description'
-    CRG_LIBRARY = 'crg_library'
-    CRG_GROUP = 'crg_group'
-    CRG_KEY = 'crg_key'
     AUDIT_HASH = 'audit_hash'
 
 
@@ -56,38 +42,6 @@ class Comic:
         return self._topic.topic_link
 
     @property
-    def topic_owner(self) -> str:
-        return self._topic.topic_owner
-
-    @property
-    def topic_created(self) -> datetime:
-        return self._topic.topic_created
-
-    @property
-    def topic_created_str(self) -> str:
-        return self._topic.topic_created_str
-
-    @property
-    def topic_title(self) -> str:
-        return self._topic.topic_title
-
-    @property
-    def topic_description(self) -> str:
-        return self._topic.topic_description
-
-    @property
-    def crg_library(self) -> str:
-        return self._topic.crg_library
-
-    @property
-    def crg_group(self) -> str:
-        return self._topic.crg_group
-
-    @property
-    def crg_key(self) -> str:
-        return self._topic.crg_key
-
-    @property
     def audit_hash(self) -> str:
         return self._topic.audit_hash
 
@@ -98,12 +52,5 @@ class Comic:
             Property.ED2K_LINK.value: self._ed2k_link,
             Property.TOPIC_ID.value: self.topic_id,
             Property.TOPIC_LINK.value: self.topic_link,
-            Property.TOPIC_OWNER.value: self.topic_owner,
-            Property.TOPIC_CREATED.value: self.topic_created_str,
-            Property.TOPIC_TITLE.value: self.topic_title,
-            Property.TOPIC_DESCRIPTION.value: self.topic_description,
-            Property.CRG_LIBRARY.value: self.crg_library,
-            Property.CRG_GROUP.value: self.crg_group,
-            Property.CRG_KEY.value: self.crg_key,
             Property.AUDIT_HASH.value: self.audit_hash
         }

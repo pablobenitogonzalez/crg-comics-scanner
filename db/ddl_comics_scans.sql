@@ -2,20 +2,17 @@
 
 -- Drop table
 
--- DROP TABLE public.scans;
+-- DROP TABLE public.comics_scans;
 
-CREATE TABLE public.scans (
+CREATE TABLE public.comics_scans (
 	id bigserial NOT NULL,
-	type varchar NOT NULL,
 	"result" varchar NOT NULL,
 	started timestamp NOT NULL,
 	finished timestamp NOT NULL,
 	elapsed varchar NOT NULL,
+	total_topics int4 NOT NULL,
 	scanned int4 NOT NULL,
-	skipped int4 NOT NULL,
 	added int4 NOT NULL,
-	updated int4 NOT NULL,
-	details json NOT NULL,
 	exception_type varchar NULL,
 	exception_message text NULL,
 	exception_stacktrace text NULL,
