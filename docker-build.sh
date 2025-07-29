@@ -1,2 +1,2 @@
-docker build -t crg-comics .
-docker save crg-comics:latest | gzip > crg-comics.tar.gz
+docker build -t crg-comics-scanner .
+docker save crg-comics-scanner:latest | gzip > crg-comics-scanner.tar.gz

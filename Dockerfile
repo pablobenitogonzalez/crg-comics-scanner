@@ -1,5 +1,8 @@
 FROM python:latest
 
+RUN mkdir -p /ed2klinks
+RUN mkdir -p /reading
+
 WORKDIR /src
 
 COPY ./src/* ./
