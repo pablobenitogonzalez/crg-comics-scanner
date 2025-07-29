@@ -19,8 +19,8 @@ class LoginDataProperty(Enum):
 
 class RequestManager:
     def __init__(self):
-        self._min_delay = 2.0
-        self._max_delay = 3.0
+        self._min_delay = 5.0
+        self._max_delay = 10.0
         self._timeout = 5
         self._session = requests.Session()
         login_url = _web.login_url.format(_web.protocol)
