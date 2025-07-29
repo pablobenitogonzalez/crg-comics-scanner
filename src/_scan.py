@@ -92,11 +92,13 @@ class Scan:
     def total_topics(self, total_topics: int):
         self._total_topics = total_topics
 
-    def inc_scanned(self, scanned: int):
-        self._scanned += scanned
+    @scanned.setter
+    def scanned(self, scanned: int):
+        self._scanned = scanned
 
-    def inc_added(self, added: int):
-        self._added += added
+    @added.setter
+    def added(self, added: int):
+        self._added = added
 
     @exception_type.setter
     def exception_type(self, exception_type: str):
@@ -116,6 +118,7 @@ class Scan:
             Property.STARTED.value: self.started_str,
             Property.FINISHED.value: self.finished_str,
             Property.ELAPSED.value: self._elapsed,
+            Property.TOTAL_TOPICS.value: self._total_topics,
             Property.SCANNED.value: self._scanned,
             Property.ADDED.value: self._added
         }

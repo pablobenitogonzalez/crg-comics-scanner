@@ -12,5 +12,6 @@ CREATE TABLE public.comics (
 	topic_link varchar NOT NULL,
 	audit_created timestamp NULL DEFAULT (now() AT TIME ZONE 'utc'::text),
 	audit_updated timestamp NULL DEFAULT (now() AT TIME ZONE 'utc'::text),
+	audit_hash varchar NOT NULL,
 	CONSTRAINT comics_pkey PRIMARY KEY (ed2k_md4)
 );

@@ -22,7 +22,7 @@ try:
 
     for topic_id in topic_ids:
 
-        topic = _topic.Topic(rq_manager, topic_id)
+        topic = _topic.Topic(rq_manager, topic_id[0])
         for ed2k in topic.ed2ks:
 
             comic = _comic.Comic(topic, ed2k)
@@ -38,8 +38,8 @@ try:
             idx_scanned += 1
 
         # manage totals
-        scan.inc_scanned(idx_scanned)
-        scan.inc_added(idx_added)
+        scan.scanned = idx_scanned
+        scan.added = idx_added
 
 except Exception as e:
     print(f'[ERROR] {e}')
