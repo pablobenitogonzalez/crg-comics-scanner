@@ -161,7 +161,6 @@ cython_debug/
 .idea/
 
 # file
-ed2klinks/
 reading/
 
 # docker image
