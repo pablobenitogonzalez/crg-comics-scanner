@@ -36,7 +36,7 @@ try:
 
         idx_topic += 1
         if (idx_topic % MAX_TOPICS) == 0:
-            _logging.info(f'-----Waiting {DELAY} second/s for rate limit (next topic to process is {idx_topic})-----')
+            _logging.debug(f'-----Waiting {DELAY} second/s for rate limit (next topic to process is {idx_topic})-----')
             time.sleep(DELAY)
 
         topic = _topic.Topic(rq_manager, topic_id[0])
@@ -50,7 +50,7 @@ try:
                 db_manager.create_comic(comic)
                 idx_scanned += 1
                 idx_added += 1
-                _logging.info(f'{idx_scanned}: >>> added <<< {comic.to_dict()}')
+                _logging.info(f'>>> added <<< {comic.to_dict()}')
                 continue
 
             idx_scanned += 1
