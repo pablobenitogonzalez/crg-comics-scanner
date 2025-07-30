@@ -1,6 +1,8 @@
 import json
+import os
 import time
 import traceback
+from enum import Enum
 
 import _comic
 import _database
@@ -9,6 +11,11 @@ import _logger
 import _request
 import _scan
 import _topic
+
+
+class EnvProperty(Enum):
+    DELAY = 'delay'
+    MAX_TOPICS = 'max_topics'
 
 scan = _scan.Scan()
 rq_manager = _request.RequestManager()
@@ -25,8 +32,9 @@ try:
     for topic_id in topic_ids:
 
         idx_topic += 1
-        if (idx_topic % 50) == 0:
-            delay = 600  # 10m
+        max_topics = int(os.getenv(EnvProperty.MAX_TOPICS.value, 50))  # default 50
+        if (idx_topic % max_topics) == 0:
+            delay = int(os.getenv(EnvProperty.DELAY.value, 600))  # default 10 minutes
             _logger.info(f'Topic index {idx_topic}: waiting {delay} second/s for rate limit')
             time.sleep(delay)
 
