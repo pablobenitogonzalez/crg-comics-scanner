@@ -25,8 +25,8 @@ try:
     for topic_id in topic_ids:
 
         idx_topic += 1
-        if (idx_topic % 1000) == 0:
-            delay = 3600  # 1h
+        if (idx_topic % 200) == 0:
+            delay = 1800  # 30m
             _logger.info(f'Topic index {idx_topic}: waiting {delay} second/s for rate limit')
             time.sleep(delay)
 
