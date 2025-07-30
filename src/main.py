@@ -1,4 +1,5 @@
 import json
+import time
 import traceback
 
 import _comic
@@ -17,10 +18,17 @@ try:
 
     topic_ids = file_manager.read()
     scan.total_topics = len(topic_ids)
+    idx_topic = 0
     idx_scanned = 0
     idx_added = 0
 
     for topic_id in topic_ids:
+
+        idx_topic += 1
+        if idx_topic == 1000:
+            wait_seconds = 3600  # 1h
+            _logger.info(f'Topic index {idx_topic}: waiting {wait_seconds} second/s for rate limit')
+            time.sleep(wait_seconds)
 
         topic = _topic.Topic(rq_manager, topic_id[0])
         for ed2k in topic.ed2ks:
