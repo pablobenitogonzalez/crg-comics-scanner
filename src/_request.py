@@ -5,7 +5,7 @@ from enum import Enum
 import requests
 from retry import retry
 
-import _logger
+import _logging
 import _web
 
 
@@ -33,19 +33,19 @@ class RequestManager:
         try:
             self._session.post(login_url, data=form_data)
         except Exception as e:
-            print(f'[ERROR] {e}')
+            _logging.error(f'[ERROR] {e}')
             raise e
 
     @retry(Exception, delay=5, tries=5, backoff=5)
     def get_html(self, url):
         try:
             sleep_duration = random.uniform( self._min_delay, self._max_delay)
-            _logger.info(f"Waiting {sleep_duration:.2f} seconds before next request...")
+            _logging.debug(f"-----Waiting {sleep_duration:.2f} seconds before next request-----")
             time.sleep(sleep_duration)  # rate limit issues
             response = self._session.get(url, timeout=self._timeout)
             if response.status_code != 200:
                 raise Exception(f'Server responded with status code {response.status_code}')
             return response.text
         except Exception as e:
-            print(f'[ERROR] {e}')
+            _logging.error(f'[ERROR] {e}')
             raise e

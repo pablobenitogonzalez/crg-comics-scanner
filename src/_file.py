@@ -1,7 +1,7 @@
 import os
 import re
 
-READING_PATH = '../reading'
+READING_PATH = '/mnt/hgfs/__reading'
 
 class FileManager:
     @staticmethod
