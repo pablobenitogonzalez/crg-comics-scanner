@@ -45,11 +45,11 @@ class DatabaseManager:
 
     def save_scan(self, scan: _scan.Scan):
         sql = '''
-              insert into comics_scans ("result", started, finished, elapsed, total_topics, scanned, added,
-                                        exception_type, exception_message, exception_stacktrace, audit_created) values (%s, %s, %s, %s, %s, %s, %s,
-                                                                                                                        %s, %s, %s, (now() at time zone 'utc'::text)) \
+              insert into comics_scans ("result", started, finished, elapsed, total_topics, topics_processed, scanned,
+                                        added, exception_type, exception_message, exception_stacktrace, audit_created)
+              values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, (now() at time zone 'utc'::text)) \
               '''
-        values = (scan.result, scan.started, scan.finished, scan.elapsed, scan.total_topics, scan.scanned,
-                  scan.added, scan.exception_type, scan.exception_message, scan.exception_stacktrace)
+        values = (scan.result, scan.started, scan.finished, scan.elapsed, scan.total_topics, scan.topics_processed,
+                  scan.scanned, scan.added, scan.exception_type, scan.exception_message, scan.exception_stacktrace)
         self.__execute(sql, values)
 

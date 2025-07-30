@@ -11,6 +11,7 @@ CREATE TABLE public.comics_scans (
 	finished timestamp NOT NULL,
 	elapsed varchar NOT NULL,
 	total_topics int4 NOT NULL,
+	topics_processed int4 NOT NULL,
 	scanned int4 NOT NULL,
 	added int4 NOT NULL,
 	exception_type varchar NULL,

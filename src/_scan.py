@@ -9,6 +9,7 @@ class Property(Enum):
     FINISHED = 'finished'
     ELAPSED = 'elapsed'
     TOTAL_TOPICS = 'total_topics'
+    TOPICS_PROCESSED = 'topics_processed'
     SCANNED = 'scanned'
     ADDED = 'added'
     EXCEPTION_TYPE = 'exception_type'
@@ -29,6 +30,7 @@ class Scan:
         self._finished = None
         self._elapsed: str = ''
         self._total_topics: int = 0
+        self._topics_processed: int = 0
         self._scanned: int = 0
         self._added: int = 0
         self._exception_type = None
@@ -64,6 +66,10 @@ class Scan:
         return self._total_topics
 
     @property
+    def topics_processed(self) -> int:
+        return self._topics_processed
+
+    @property
     def scanned(self) -> int:
         return self._scanned
 
@@ -92,6 +98,10 @@ class Scan:
     def total_topics(self, total_topics: int):
         self._total_topics = total_topics
 
+    @topics_processed.setter
+    def topics_processed(self, topics_processed: int):
+        self._topics_processed = topics_processed
+
     @scanned.setter
     def scanned(self, scanned: int):
         self._scanned = scanned
@@ -119,6 +129,7 @@ class Scan:
             Property.FINISHED.value: self.finished_str,
             Property.ELAPSED.value: self._elapsed,
             Property.TOTAL_TOPICS.value: self._total_topics,
+            Property.TOPICS_PROCESSED.value: self._topics_processed,
             Property.SCANNED.value: self._scanned,
             Property.ADDED.value: self._added
         }

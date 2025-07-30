@@ -45,9 +45,10 @@ try:
 
             idx_scanned += 1
 
-        # manage totals
-        scan.scanned = idx_scanned
-        scan.added = idx_added
+    # manage totals
+    scan.scanned = scan.scanned + idx_scanned
+    scan.added =  scan.added + idx_added
+    scan.topics_processed = idx_topic
 
 except Exception as e:
     print(f'[ERROR] {e}')
