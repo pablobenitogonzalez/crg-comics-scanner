@@ -25,7 +25,7 @@ try:
     for topic_id in topic_ids:
 
         idx_topic += 1
-        if idx_topic == 1000:
+        if idx_topic%1000 == 0:
             wait_seconds = 3600  # 1h
             _logger.info(f'Topic index {idx_topic}: waiting {wait_seconds} second/s for rate limit')
             time.sleep(wait_seconds)
