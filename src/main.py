@@ -25,10 +25,10 @@ try:
     for topic_id in topic_ids:
 
         idx_topic += 1
-        if idx_topic%1000 == 0:
-            wait_seconds = 3600  # 1h
-            _logger.info(f'Topic index {idx_topic}: waiting {wait_seconds} second/s for rate limit')
-            time.sleep(wait_seconds)
+        if (idx_topic % 1000) == 0:
+            delay = 3600  # 1h
+            _logger.info(f'Topic index {idx_topic}: waiting {delay} second/s for rate limit')
+            time.sleep(delay)
 
         topic = _topic.Topic(rq_manager, topic_id[0])
         for ed2k in topic.ed2ks:
