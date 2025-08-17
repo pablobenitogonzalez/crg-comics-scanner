@@ -6,9 +6,11 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="DELAY" value="10" />
-      <env name="SHOW_LOGS" value="1" />
       <env name="MAX_TOPICS" value="500" />
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="SHOW_LOGS" value="1" />
+      <env name="CRG_USER" value="zedreno" />
+      <env name="CRG_PASS" value="p12b02g78" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
