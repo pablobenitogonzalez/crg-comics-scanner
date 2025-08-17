@@ -1,3 +1,4 @@
+import os
 import random
 import time
 from enum import Enum
@@ -7,6 +8,14 @@ from retry import retry
 
 import _logging
 import _web
+
+
+class EnvProperty(Enum):
+    CRG_USER = 'CRG_USER'
+    CRG_PASS = 'CRG_PASS'
+
+CRG_USER = os.getenv(EnvProperty.CRG_USER.value, "unknown")
+CRG_PASS = os.getenv(EnvProperty.CRG_PASS.value, "unknown")
 
 
 # noinspection HttpUrlsUsage
@@ -45,8 +54,8 @@ class RequestManager:
             login_url = _web.login_url.format(_web.protocol)
             form_data = {
                 LoginDataProperty.REFERER.value: login_url,
-                LoginDataProperty.USER.value: 'zedreno',
-                LoginDataProperty.PASSWORD.value: 'p12b02g78',
+                LoginDataProperty.USER.value: CRG_USER,
+                LoginDataProperty.PASSWORD.value: CRG_PASS,
                 LoginDataProperty.COOKIE_DATE.value: '1'
             }
             session.post(login_url, data=form_data)
