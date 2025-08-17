@@ -14,8 +14,8 @@ import _topic
 
 
 class EnvProperty(Enum):
-    DELAY = 'delay'
-    MAX_TOPICS = 'max_topics'
+    DELAY = 'DELAY'
+    MAX_TOPICS = 'MAX_TOPICS'
 
 DELAY = int(os.getenv(EnvProperty.DELAY.value, 600))  # default 10 minutes
 MAX_TOPICS = int(os.getenv(EnvProperty.MAX_TOPICS.value, 50)) # default 50

@@ -5,10 +5,10 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="logs" value="1" />
+      <env name="DELAY" value="10" />
+      <env name="SHOW_LOGS" value="1" />
+      <env name="MAX_TOPICS" value="500" />
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="delay" value="10" />
-      <env name="max_topics" value="500" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />

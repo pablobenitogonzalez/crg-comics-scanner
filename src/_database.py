@@ -1,16 +1,33 @@
+import os
+from enum import Enum
+
 import psycopg2
 
 import _comic
 import _scan
 
 
+class EnvProperty(Enum):
+    DB_HOST = 'DB_HOST'
+    DB_PORT = 'DB_PORT'
+    DB_NAME = 'DB_NAME'
+    DB_USER = 'DB_USER'
+    DB_PASS = 'DB_PASS'
+
+DB_HOST = os.getenv(EnvProperty.DB_HOST.value, "192.168.50.69")
+DB_PORT = os.getenv(EnvProperty.DB_PORT.value, "5436")
+DB_NAME = os.getenv(EnvProperty.DB_NAME.value, "crg")
+DB_USER = os.getenv(EnvProperty.DB_USER.value, "crg")
+DB_PASS = os.getenv(EnvProperty.DB_PASS.value, "crg")
+
+
 class DatabaseManager:
     def __init__(self):
-        self._conn = psycopg2.connect(user="crg",
-                                      password="crg",
-                                      host="192.168.50.74",
-                                      port="5433",
-                                      database="crg")
+        self._conn = psycopg2.connect(user=DB_USER,
+                                      password=DB_PASS,
+                                      host=DB_HOST,
+                                      port=DB_PORT,
+                                      database=DB_NAME)
 
     def close_conn(self):
         self._conn.close()
