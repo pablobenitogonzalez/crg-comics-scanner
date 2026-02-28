@@ -32,17 +32,21 @@ class HeaderProperty(Enum):
     ACCEPT_LANGUAGE = 'Accept-Language'
     CACHE_CONTROL = 'Cache-Control'
     CONNECTION = 'Connection'
+    CONTENT_LENGTH = 'Content-Length'
+    CONTENT_TYPE = 'Content-Type'
     HOST = 'Host'
+    ORIGIN = 'Origin'
     PRAGMA = 'Pragma'
+    REFERER = 'Referer'
     UPGRADE_INSECURE_REQUESTS = 'Upgrade-Insecure-Requests'
     USER_AGENT = 'User-Agent'
 
 
+# noinspection HttpUrlsUsage,DuplicatedCode
 class RequestManager:
     def __init__(self):
         self._min_delay = 0.5
         self._max_delay = 1.0
-        self._timeout = 5
 
     @retry(Exception, delay=3, tries=3, backoff=2)
     def get_html(self, url):
@@ -52,14 +56,31 @@ class RequestManager:
             time.sleep(sleep_duration)  # rate limit issues
             session = requests.Session()
             login_url = _web.login_url.format(_web.protocol)
+            headers_login = {
+                HeaderProperty.ACCEPT.value: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,'
+                                             'image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                HeaderProperty.ACCEPT_ENCODING.value: 'gzip, deflate',
+                HeaderProperty.ACCEPT_LANGUAGE.value: 'es-ES,es;q=0.9,en;q=0.8',
+                HeaderProperty.CACHE_CONTROL.value: 'no-cache',
+                HeaderProperty.CONNECTION.value: 'keep-alive',
+                HeaderProperty.CONTENT_LENGTH.value: '100',
+                HeaderProperty.CONTENT_TYPE.value: 'application/x-www-form-urlencode',
+                HeaderProperty.HOST.value: 'lamansion-crg.net',
+                HeaderProperty.ORIGIN.value: 'http://lamansion-crg.net',
+                HeaderProperty.PRAGMA.value: 'no-cache',
+                HeaderProperty.REFERER.value: 'http://lamansion-crg.net/forum/index.php?act=Login&CODE=00',
+                HeaderProperty.UPGRADE_INSECURE_REQUESTS.value: '1',
+                HeaderProperty.USER_AGENT.value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                                 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
+            }
             form_data = {
                 LoginDataProperty.REFERER.value: login_url,
                 LoginDataProperty.USER.value: CRG_USER,
                 LoginDataProperty.PASSWORD.value: CRG_PASS,
                 LoginDataProperty.COOKIE_DATE.value: '1'
             }
-            session.post(login_url, data=form_data)
-            headers = {
+            session.post(login_url, data=form_data, headers=headers_login, timeout=15)
+            headers_get = {
                 HeaderProperty.ACCEPT.value: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,'
                                              'image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
                 HeaderProperty.ACCEPT_ENCODING.value: 'gzip, deflate',
@@ -72,7 +93,7 @@ class RequestManager:
                 HeaderProperty.USER_AGENT.value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                                                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
             }
-            response = session.get(url, headers=headers, timeout=self._timeout)
+            response = session.get(url, headers=headers_get, timeout=15)
             if response.status_code != 200:
                 raise Exception(f'Server responded with status code {response.status_code}')
             return response.text
