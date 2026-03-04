@@ -47,6 +47,7 @@ try:
             db_hash = db_manager.find_db_comic_hash(comic.ed2k_md4)
 
             if not db_hash:
+                _logging.info(f'>>> creating comic {db_hash} <<<')
                 db_manager.create_comic(comic)
                 idx_scanned += 1
                 idx_added += 1
