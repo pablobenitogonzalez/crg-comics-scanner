@@ -14,11 +14,11 @@ class EnvProperty(Enum):
     CRG_USER = 'CRG_USER'
     CRG_PASS = 'CRG_PASS'
 
+
 CRG_USER = os.getenv(EnvProperty.CRG_USER.value, "unknown")
 CRG_PASS = os.getenv(EnvProperty.CRG_PASS.value, "unknown")
 
 
-# noinspection HttpUrlsUsage
 class LoginDataProperty(Enum):
     REFERER = 'referer'
     USER = 'UserName'
@@ -28,75 +28,69 @@ class LoginDataProperty(Enum):
 
 class HeaderProperty(Enum):
     ACCEPT = 'Accept'
-    ACCEPT_ENCODING = 'Accept-Encoding'
     ACCEPT_LANGUAGE = 'Accept-Language'
-    CACHE_CONTROL = 'Cache-Control'
-    CONNECTION = 'Connection'
-    CONTENT_LENGTH = 'Content-Length'
-    CONTENT_TYPE = 'Content-Type'
-    HOST = 'Host'
-    ORIGIN = 'Origin'
-    PRAGMA = 'Pragma'
     REFERER = 'Referer'
-    UPGRADE_INSECURE_REQUESTS = 'Upgrade-Insecure-Requests'
+    ORIGIN = 'Origin'
     USER_AGENT = 'User-Agent'
 
 
-# noinspection HttpUrlsUsage,DuplicatedCode
+# noinspection HttpUrlsUsage
 class RequestManager:
     def __init__(self):
         self._min_delay = 0.5
         self._max_delay = 1.0
+        self._session = requests.Session()
+        self._authenticate()
+
+    def _authenticate(self):
+        _logging.info("Authenticating...")
+        login_url = _web.login_url.format(_web.protocol)
+        common_headers = {
+            HeaderProperty.USER_AGENT.value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                                             '(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+            HeaderProperty.ACCEPT_LANGUAGE.value: 'es-ES,es;q=0.9,en;q=0.8',
+        }
+        self._session.get(login_url, headers=common_headers, timeout=10)
+        headers_login = {
+            **common_headers,
+            HeaderProperty.REFERER.value: login_url,
+            HeaderProperty.ORIGIN.value: 'http://lamansion-crg.net'
+        }
+        form_data = {
+            LoginDataProperty.REFERER.value: login_url,
+            LoginDataProperty.USER.value: CRG_USER,
+            LoginDataProperty.PASSWORD.value: CRG_PASS,
+            LoginDataProperty.COOKIE_DATE.value: '1'
+        }
+        response = self._session.post(login_url, data=form_data, headers=headers_login, timeout=15)
+        if 'Contraseña' in response.text:
+            error_msg = 'Login error, invalid credentials.'
+            _logging.error(error_msg)
+            raise Exception(error_msg)
+
+        _logging.info("Authentication completed.")
 
     @retry(Exception, delay=3, tries=3, backoff=2)
     def get_html(self, url):
         try:
-            sleep_duration = random.uniform( self._min_delay, self._max_delay)
+            sleep_duration = random.uniform(self._min_delay, self._max_delay)
             _logging.debug(f"-----Waiting {sleep_duration:.2f} seconds before next request-----")
-            time.sleep(sleep_duration)  # rate limit issues
-            session = requests.Session()
-            login_url = _web.login_url.format(_web.protocol)
-            headers_login = {
-                HeaderProperty.ACCEPT.value: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,'
-                                             'image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                HeaderProperty.ACCEPT_ENCODING.value: 'gzip, deflate',
-                HeaderProperty.ACCEPT_LANGUAGE.value: 'es-ES,es;q=0.9,en;q=0.8',
-                HeaderProperty.CACHE_CONTROL.value: 'no-cache',
-                HeaderProperty.CONNECTION.value: 'keep-alive',
-                HeaderProperty.CONTENT_LENGTH.value: '100',
-                HeaderProperty.CONTENT_TYPE.value: 'application/x-www-form-urlencode',
-                HeaderProperty.HOST.value: 'lamansion-crg.net',
-                HeaderProperty.ORIGIN.value: 'http://lamansion-crg.net',
-                HeaderProperty.PRAGMA.value: 'no-cache',
-                HeaderProperty.REFERER.value: 'http://lamansion-crg.net/forum/index.php?act=Login&CODE=00',
-                HeaderProperty.UPGRADE_INSECURE_REQUESTS.value: '1',
-                HeaderProperty.USER_AGENT.value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                                                 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
-            }
-            form_data = {
-                LoginDataProperty.REFERER.value: login_url,
-                LoginDataProperty.USER.value: CRG_USER,
-                LoginDataProperty.PASSWORD.value: CRG_PASS,
-                LoginDataProperty.COOKIE_DATE.value: '1'
-            }
-            session.post(login_url, data=form_data, headers=headers_login, timeout=15)
+            time.sleep(sleep_duration)
+
             headers_get = {
-                HeaderProperty.ACCEPT.value: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,'
-                                             'image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                HeaderProperty.ACCEPT_ENCODING.value: 'gzip, deflate',
-                HeaderProperty.ACCEPT_LANGUAGE.value: 'es-ES,es;q=0.9,en;q=0.8',
-                HeaderProperty.CACHE_CONTROL.value: 'no-cache',
-                HeaderProperty.CONNECTION.value: 'keep-alive',
-                HeaderProperty.HOST.value: 'lamansion-crg.net',
-                HeaderProperty.PRAGMA.value: 'no-cache',
-                HeaderProperty.UPGRADE_INSECURE_REQUESTS.value: '1',
-                HeaderProperty.USER_AGENT.value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                                                 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
+                HeaderProperty.ACCEPT.value: 'text/html,application/xhtml+xml,application/xml;q=0.9,'
+                                             'image/avif,image/webp,*/*;q=0.8',
+                HeaderProperty.USER_AGENT.value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                                                 '(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
             }
-            response = session.get(url, headers=headers_get, timeout=15)
-            if response.status_code != 200:
-                raise Exception(f'Server responded with status code {response.status_code}')
+            response = self._session.get(url, headers=headers_get, timeout=15)
+
+            if 'act=Login' in response.url:
+                self._authenticate()
+                raise Exception('Session expired')
+
             return response.text
+
         except Exception as e:
             _logging.error(f'[ERROR] {e}')
             raise e
