@@ -39,12 +39,20 @@ try:
             _logging.debug(f'-----Waiting {DELAY} second/s for rate limit (next topic to process is {idx_topic})-----')
             time.sleep(DELAY)
 
+        # IMPORTANT: Clear the tracking cookie before each request.
+        # The forum's Apache server (v2.2.14) has a strict header size limit.
+        # Without this, the 'foro_nuevotopicsread' cookie grows indefinitely
+        # with every new topic processed, eventually breaking the request.
+        rq_manager.clear_read_cookies()
+
         topic = _topic.Topic(rq_manager, topic_id[0])
         _logging.info(f'[TOPIC {idx_topic}] {topic.topic_link}')
+        _logging.info(f'----- Found {len(topic.ed2ks)} link(s) ed2k')
         for ed2k in topic.ed2ks:
 
             comic = _comic.Comic(topic, ed2k)
             db_hash = db_manager.find_db_comic_hash(comic.ed2k_md4)
+            _logging.info(f'----- Hash in DB for {comic.ed2k_md4}: {db_hash}')
 
             if not db_hash:
                 _logging.info(f'>>> creating comic <<<')

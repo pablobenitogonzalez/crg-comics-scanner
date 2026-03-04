@@ -70,6 +70,14 @@ class RequestManager:
 
         _logging.info("Authentication completed.")
 
+    def clear_read_cookies(self):
+        """ Removes the 'foro_nuevotopicsread' cookie from the session.
+        This prevents the 'HTTP 400 Bad Request' error caused by
+        excessive header size when the forum tracks too many read topics.
+        """
+        self._session.cookies.pop('foro_nuevotopicsread', None)
+        _logging.debug("Read-topics cookie cleared to prevent header overflow.")
+
     @retry(Exception, delay=3, tries=3, backoff=2)
     def get_html(self, url):
         try:
